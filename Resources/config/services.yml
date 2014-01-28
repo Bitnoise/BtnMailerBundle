@@ -1,0 +1,11 @@
+services:
+    btn.service.mailer:
+        class: Btn\MailerBundle\Service\MailerService
+        arguments:
+            - @mailer
+            - @router
+            - @twig
+            - @logger
+            - %btn_mailer.parameters%
+    #alias form btn.service.mailer
+    btn.mailer: @btn.service.mailer

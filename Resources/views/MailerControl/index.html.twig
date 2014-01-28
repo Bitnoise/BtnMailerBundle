@@ -1,0 +1,37 @@
+{% from 'BtnCrudBundle::breadcrumb.html.twig' import breadcrumb %}
+{% extends '::control.html.twig' %}
+
+{% block content %}
+
+    <h2>Lista szablonów</h2>
+
+    <table class="table table-bordered table-condensed">
+        <thead>
+            <tr>
+                <th>Nazwa</th>
+                <th>Nadawca</th>
+                <th>Szablon</th>
+                <th>{% trans %}crud.actions{% endtrans %}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for key, template in templates %}
+            <tr>
+                <td>{{ template.name|default('') }}</td>
+                <td>{{ template.fromName|default(fromName) }} &lt;{{ template.fromEmail|default(fromEmail) }}&gt;</td>
+                <td>{{ template.template }}</td>
+                <td>
+                    <a href="{{ path('cp_mailer_test', { 'key': key }) }}" class="btn btn-sm btn-primary">{% trans %}btn_mailer.test{% endtrans %}</a>
+                    {# <a href="{{ path('cp_issue_edit', { 'id': entity.id }) }}" class="btn btn-sm btn-primary">{% trans %}mailer.test{% endtrans %}</a> #}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ breadcrumb({'cp_mailer': 'crud.breadcrumb.list'}) }}
+{% endblock %}

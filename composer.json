@@ -1,0 +1,30 @@
+{
+    "name": "bitnoise/mailer-bundle",
+    "type": "symfony-bundle",
+    "description": "",
+    "keywords": [ "bitnoise", "mailer"],
+    "homepage": "https://github.com/Bitnoise/BtnMailerBundle",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Bitnoise Team",
+            "homepage": "http://www.bitnoi.se/",
+            "email": "labs@bitnoi.se"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "bitnoise/base-bundle": "dev-sf23"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "https://github.com/Bitnoise/BtnBaseBundle.git"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "Btn\\MailerBundle": "" }
+    },
+    "target-dir": "Btn/MailerBundle"
+}

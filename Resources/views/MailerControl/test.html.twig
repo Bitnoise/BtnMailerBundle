@@ -1,0 +1,26 @@
+{% from 'BtnCrudBundle::breadcrumb.html.twig' import breadcrumb %}
+{% extends '::control.html.twig' %}
+
+{% form_theme testForm 'BtnCrudBundle:Form:fields.html.twig' %}
+
+{% block content %}
+
+    <form action="{{ path('cp_mailer_test', { 'key': key }) }}" method="post" {{ form_enctype(testForm) }} class="well form-horizontal" role="form" novalidate>
+        <fieldset>
+            <legend>Test wiadomości: {{ template.name|default('') }}</legend>
+            {{ form_widget(testForm) }}
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-success">{% trans %}btn_mailer.test{% endtrans %}</button>
+                </div>
+            </div>
+        </fieldset>
+    </form>
+
+    <a href="{{ path('cp_mailer') }}" class="btn">&laquo; {% trans %}crud.back{% endtrans %}</a>
+
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ breadcrumb({'cp_mailer': 'crud.breadcrumb.list', 'cp_mailer_test': 'crud.breadcrumb.edit'}) }}
+{% endblock %}

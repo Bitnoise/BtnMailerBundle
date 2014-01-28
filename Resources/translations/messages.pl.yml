@@ -1,0 +1,6 @@
+btn_mailer:
+    form:
+        toEmail: 'Odbiorca'
+    test: 'Testuj'
+    send: 'Wyślij'
+    test_sended: 'Wiadomość testowa została wysłana'
