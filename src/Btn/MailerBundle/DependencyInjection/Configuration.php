@@ -5,10 +5,6 @@ namespace Btn\MailerBundle\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
-/**
- * This is the class that validates and merges configuration from your app/config files
- *
- */
 class Configuration implements ConfigurationInterface
 {
     /**
@@ -23,24 +19,24 @@ class Configuration implements ConfigurationInterface
             ->children()
                 ->scalarNode('service')->end()
                 ->scalarNode('domain')->end()
-                ->scalarNode('fromName')->end()
-                ->scalarNode('fromEmail')->isRequired()->end()
+                ->scalarNode('from_name')->end()
+                ->scalarNode('from_email')->isRequired()->end()
                 ->variableNode('context')->defaultValue(array())->end()
-                ->variableNode('toEmail')->end()
+                ->variableNode('to_email')->end()
                 ->arrayNode('templates')
                     ->prototype('array')
                         ->children()
                             ->scalarNode('name')->end()
                             ->scalarNode('template')->isRequired()->end()
-                            ->scalarNode('fromName')->end()
-                            ->scalarNode('fromEmail')->end()
+                            ->scalarNode('from_name')->end()
+                            ->scalarNode('from_email')->end()
                             ->variableNode('context')->defaultValue(array())->end()
-                            ->variableNode('toEmail')->end()
-                            ->arrayNode('contextFields')
+                            ->variableNode('to_email')->end()
+                            ->arrayNode('context_fields')
                                 ->prototype('array')
                                     ->children()
                                         ->scalarNode('name')->end()
-                                        ->scalarNode('paramConverter')->end()
+                                        ->scalarNode('param_converter')->end()
                                         ->enumNode('type')
                                             ->isRequired()
                                             ->values(array('entity', 'text', 'integer'))

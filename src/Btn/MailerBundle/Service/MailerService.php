@@ -11,29 +11,19 @@ use Psr\Log\LoggerInterface;
  */
 class MailerService
 {
-    /**
-     * @var \Swift_Mailer
-     */
+    /** @var \Swift_Mailer */
     protected $mailer;
 
-    /**
-     * @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface
-     */
+    /** @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface */
     protected $router;
 
-    /**
-     * @var \Twig_Environment $twig
-     */
+    /** @var \Twig_Environment $twig */
     protected $twig;
 
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $parameters;
 
     /**
@@ -113,7 +103,7 @@ class MailerService
         if (isset($this->parameters['templates'][$template])) {
             $templateParms = $this->parameters['templates'][$template];
             if ($defaults) {
-                foreach (array('fromEmail', 'fromName', 'toEmail') as $key) {
+                foreach (array('from_email', 'from_name', 'to_email') as $key) {
                     if (!array_key_exists($key, $templateParms) && !empty($this->parameters[$key])) {
                         $templateParms[$key] = $this->parameters[$key];
                     }
@@ -161,10 +151,10 @@ class MailerService
     {
         $tp = $this->templateParms($template);
         if (!$fromEmail) {
-            $fromEmail = !empty($tp['fromName']) ? array($tp['fromEmail'] => $tp['fromName']) : $tp['fromEmail'];
+            $fromEmail = !empty($tp['from_name']) ? array($tp['from_email'] => $tp['from_name']) : $tp['from_email'];
         }
-        if (!$toEmail && !empty($tp['toEmail'])) {
-            $toEmail = $tp['toEmail'];
+        if (!$toEmail && !empty($tp['to_email'])) {
+            $toEmail = $tp['to_email'];
         }
         $context = array_merge($tp['context'], $context);
 
