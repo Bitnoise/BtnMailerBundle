@@ -16,7 +16,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "bitnoise/base-bundle": "2.0.*"
+        "bitnoise/base-bundle": "2.1.*"
     },
     "config": {
         "preferred-install": "source"
@@ -32,7 +32,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-2.0": "2.0-dev"
+            "dev-2.1": "2.1-dev"
         }
     }
 }
