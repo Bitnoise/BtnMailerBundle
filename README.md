@@ -44,16 +44,16 @@ public function registerBundles()
 btn_mailer:
     # custom maier service (optional)
     service: app.mailer
-    fromEmail: no-reply@bitnoi.se
-    fromName:  Bitnoi.se
+    from_email: no-reply@bitnoi.se
+    from_name:  Bitnoi.se
     templates:
         message:
             name: 'Sending regular message'
             template: BtnAppBundle:Mail:message.html.twig
-            contextFields:
+            context_fields:
                 message:
                     type: integer
-                    paramConverter: BtnControlBundle:Message
+                    param_converter: BtnControlBundle:Message
                     options:
                         required: true
                         label: 'Message'

@@ -43,12 +43,12 @@ class MailerControlController extends BaseController
         if ($request->getMethod() === 'POST' && $request->get($testForm->getName())) {
             $testForm->handleRequest($request);
             $context = $testForm->getData();
-            $toEmail = $context['toEmail'];
-            $this->get('session')->set('btn_mailer.toEmail', $toEmail);
+            $toEmail = $context['to_email'];
+            $this->get('session')->set('btn_mailer.to_email', $toEmail);
             unset($context['toEmail']);
             foreach ($context as $_key => $_val) {
-                if (!empty($template['contextFields'][$_key]['paramConverter'])) {
-                    $_class = $template['contextFields'][$_key]['paramConverter'];
+                if (!empty($template['contextFields'][$_key]['param_converter'])) {
+                    $_class = $template['contextFields'][$_key]['param_converter'];
                     $context[$_key] = $this->findEntity($_class, $_val);
                     if (!$context[$_key]) {
                         throw new \Exception(sprintf('Could not find entity %s for id %d', $_class, $_val));
@@ -61,7 +61,7 @@ class MailerControlController extends BaseController
                 $this->setFlash($this->get('translator')->trans('btn_mailer.test_sended'));
             }
         } else {
-            $testForm->get('toEmail')->setData($this->get('session')->get('btn_mailer.toEmail'));
+            $testForm->get('toEmail')->setData($this->get('session')->get('btn_mailer.to_email'));
         }
 
         return array(
