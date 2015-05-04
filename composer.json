@@ -6,6 +6,7 @@
     "homepage": "https://github.com/Bitnoise/BtnMailerBundle",
     "license": "MIT",
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Bitnoise Team",
@@ -15,16 +16,23 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "bitnoise/base-bundle": "dev-sf23"
+        "bitnoise/base-bundle": "2.0.*"
+    },
+    "config": {
+        "preferred-install": "source"
     },
     "repositories": [
         {
-            "type": "vcs",
-            "url":  "https://github.com/Bitnoise/BtnBaseBundle.git"
+            "type": "composer",
+            "url": "http://bitnoise.github.io/packages/"
         }
     ],
     "autoload": {
-        "psr-0": { "Btn\\MailerBundle": "" }
+        "psr-4": { "Btn\\MailerBundle\\": "src/Btn/MailerBundle/" }
     },
-    "target-dir": "Btn/MailerBundle"
+    "extra": {
+        "branch-alias": {
+            "dev-2.0": "2.0-dev"
+        }
+    }
 }
