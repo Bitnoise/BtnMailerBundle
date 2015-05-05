@@ -46,14 +46,15 @@ class MailerService
     /**
      * send message using mailer and provided template
      *
-     * @param string $templateName
-     * @param array  $context
-     * @param mixed  $fromEmail
-     * @param string $toEmail
+     * @param string            $templateName
+     * @param array             $context
+     * @param array|string      $from
+     * @param array|string      $to
+     * @param array|string|null $replyTo
      *
-     * @return boolean $status
+     * @return bool $status
      */
-    protected function send($templateName, $context, $fromEmail, $toEmail)
+    protected function send($templateName, $context, $from, $to, $replyTo = null)
     {
         $context  = array_merge($this->parameters['context'], $context);
         $template = $this->twig->loadTemplate($templateName);
@@ -67,9 +68,13 @@ class MailerService
 
         $message = \Swift_Message::newInstance()
             ->setSubject($subject)
-            ->setFrom($fromEmail)
-            ->setTo($toEmail)
+            ->setFrom($from)
+            ->setTo($to)
         ;
+
+        if ($replyTo) {
+            $message->setReplyTo($replyTo);
+        }
 
         //if have attachments add every one
         if (isset($context['attachments'])) {
@@ -87,7 +92,7 @@ class MailerService
         $result = $this->mailer->send($message);
 
         $msg = 'send@MailerService: Result: %d Template: %s Send to %s. Topic %s';
-        $logMessage = sprintf($msg, $result, $templateName, $toEmail, $subject);
+        $logMessage = sprintf($msg, $result, $templateName, $to, $subject);
         $this->logger->info($logMessage, $context);
 
         return $result;
@@ -107,7 +112,7 @@ class MailerService
         if (isset($this->parameters['templates'][$template])) {
             $templateParams = $this->parameters['templates'][$template];
             if ($defaults) {
-                foreach (array('from_email', 'from_name', 'to_email') as $key) {
+                foreach (array('from_email', 'from_name', 'to_email', 'reply_to_name', 'reply_to_email') as $key) {
                     if (!array_key_exists($key, $templateParams) && !empty($this->parameters[$key])) {
                         $templateParams[$key] = $this->parameters[$key];
                     }
@@ -144,25 +149,31 @@ class MailerService
     /**
      * Send message with predefined template in config
      *
-     * @param string $template
-     * @param array  $context
-     * @param mixed  $fromEmail
-     * @param string $toEmail
+     * @param string            $template
+     * @param array             $context
+     * @param array|string|null $to
+     * @param array|string|null $from
+     * @param array|string|null $replyTo
      *
-     * @return boolean $status
+     * @return bool $status
+     * @throws \Exception
      */
-    public function sendTemplate($template, $context = array(), $toEmail = null, $fromEmail = null)
+    public function sendTemplate($template, $context = array(), $to = null, $from = null, $replyTo = null)
     {
         $tp = $this->templateParams($template);
-        if (!$fromEmail) {
-            $fromEmail = !empty($tp['from_name']) ? array($tp['from_email'] => $tp['from_name']) : $tp['from_email'];
+        if (!$from) {
+            $from = !empty($tp['from_name']) ? array($tp['from_email'] => $tp['from_name']) : $tp['from_email'];
         }
-        if (!$toEmail && !empty($tp['to_email'])) {
-            $toEmail = $tp['to_email'];
+        if (!$to && !empty($tp['to_email'])) {
+            $to = $tp['to_email'];
         }
+        if (!$replyTo && !empty($tp['reply_to_email'])) {
+            $replyTo = !empty($tp['reply_to_name']) ? array($tp['reply_to_email'] => $tp['reply_to_name']) : $tp['reply_to_email'];
+        }
+
         $context = array_merge($tp['context'], $context);
 
-        return $this->send($tp['template'], $context, $fromEmail, $toEmail);
+        return $this->send($tp['template'], $context, $from, $to, $replyTo);
     }
 
     /**
