@@ -13,21 +13,21 @@ class MailerService
 {
     /** @var \Swift_Mailer */
     protected $mailer;
-
     /** @var \Symfony\Component\Routing\Generator\UrlGeneratorInterface */
     protected $router;
-
     /** @var \Twig_Environment $twig */
     protected $twig;
-
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
-
     /** @var array */
     protected $parameters;
 
     /**
-     *
+     * @param \Swift_Mailer         $mailer
+     * @param UrlGeneratorInterface $router
+     * @param \Twig_Environment     $twig
+     * @param LoggerInterface       $logger
+     * @param array                 $parameters
      */
     public function __construct(
         \Swift_Mailer $mailer,
@@ -71,10 +71,10 @@ class MailerService
             ->setTo($toEmail)
         ;
 
-        //if have attatchments add every one
+        //if have attachments add every one
         if (isset($context['attachments'])) {
-            foreach ($context['attachments'] as $filepath) {
-                $message->attach(\Swift_Attachment::fromPath($filepath));
+            foreach ($context['attachments'] as $filePath) {
+                $message->attach(\Swift_Attachment::fromPath($filePath));
             }
         }
 
@@ -87,30 +87,34 @@ class MailerService
         $result = $this->mailer->send($message);
 
         $msg = 'send@MailerService: Result: %d Template: %s Send to %s. Topic %s';
-        $logMesage = sprintf($msg, $result, $templateName, $toEmail, $subject);
-        $this->logger->info($logMesage, $context);
+        $logMessage = sprintf($msg, $result, $templateName, $toEmail, $subject);
+        $this->logger->info($logMessage, $context);
 
         return $result;
     }
 
     /**
-     * Get tempa
-     * @param  string    $template
-     * @throws Exception
+     * Get template params
+     *
+     * @param  string $template
+     * @param bool    $defaults
+     *
+     * @return array
+     * @throws \Exception
      */
-    public function templateParms($template, $defaults = true)
+    public function templateParams($template, $defaults = true)
     {
         if (isset($this->parameters['templates'][$template])) {
-            $templateParms = $this->parameters['templates'][$template];
+            $templateParams = $this->parameters['templates'][$template];
             if ($defaults) {
                 foreach (array('from_email', 'from_name', 'to_email') as $key) {
-                    if (!array_key_exists($key, $templateParms) && !empty($this->parameters[$key])) {
-                        $templateParms[$key] = $this->parameters[$key];
+                    if (!array_key_exists($key, $templateParams) && !empty($this->parameters[$key])) {
+                        $templateParams[$key] = $this->parameters[$key];
                     }
                 }
             }
 
-            return $templateParms;
+            return $templateParams;
         } else {
              throw new \Exception(sprintf('Template not defined %s', $template));
         }
@@ -149,7 +153,7 @@ class MailerService
      */
     public function sendTemplate($template, $context = array(), $toEmail = null, $fromEmail = null)
     {
-        $tp = $this->templateParms($template);
+        $tp = $this->templateParams($template);
         if (!$fromEmail) {
             $fromEmail = !empty($tp['from_name']) ? array($tp['from_email'] => $tp['from_name']) : $tp['from_email'];
         }
@@ -162,7 +166,13 @@ class MailerService
     }
 
     /**
-     * Magic metgod to send template message based on method name via sendTemplate()
+     * Magic method to send template message based on method name via sendTemplate()
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return mixed
+     * @throws \Exception
      */
     public function __call($method, $arguments)
     {
